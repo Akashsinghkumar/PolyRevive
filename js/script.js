@@ -331,7 +331,25 @@
             const parent = this.closest('.dropdown');
             const dropMenu = parent ? parent.querySelector('.dropdown-menu') : null;
             if (dropMenu) {
-              dropMenu.classList.toggle('show');
+              const isOpen = dropMenu.classList.contains('show');
+              if (isOpen) {
+                dropMenu.classList.remove('show');
+                this.classList.remove('show');
+                this.setAttribute('aria-expanded', 'false');
+              } else {
+                // Close any other open dropdowns first
+                document.querySelectorAll('.site-navbar .dropdown-menu.show').forEach((menu) => {
+                  menu.classList.remove('show');
+                });
+                document.querySelectorAll('.site-navbar .dropdown-toggle.show').forEach((tgl) => {
+                  tgl.classList.remove('show');
+                  tgl.setAttribute('aria-expanded', 'false');
+                });
+
+                dropMenu.classList.add('show');
+                this.classList.add('show');
+                this.setAttribute('aria-expanded', 'true');
+              }
             }
           }
         });
