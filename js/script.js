@@ -331,31 +331,37 @@
             const parent = this.closest('.dropdown');
             const dropMenu = parent ? parent.querySelector('.dropdown-menu') : null;
             if (dropMenu) {
-              const isOpen = dropMenu.classList.contains('show');
+              const isOpen = dropMenu.classList.contains('show') || (parent && parent.classList.contains('show'));
+              
+              // Close any other open dropdowns first
+              document.querySelectorAll('.site-navbar .dropdown-menu.show').forEach((menu) => {
+                menu.classList.remove('show');
+              });
+              document.querySelectorAll('.site-navbar .dropdown.show').forEach((drp) => {
+                drp.classList.remove('show');
+              });
+              document.querySelectorAll('.site-navbar .dropdown-toggle.show').forEach((tgl) => {
+                tgl.classList.remove('show');
+                tgl.setAttribute('aria-expanded', 'false');
+              });
+
               if (isOpen) {
                 dropMenu.classList.remove('show');
                 this.classList.remove('show');
                 this.setAttribute('aria-expanded', 'false');
+                if (parent) parent.classList.remove('show');
               } else {
-                // Close any other open dropdowns first
-                document.querySelectorAll('.site-navbar .dropdown-menu.show').forEach((menu) => {
-                  menu.classList.remove('show');
-                });
-                document.querySelectorAll('.site-navbar .dropdown-toggle.show').forEach((tgl) => {
-                  tgl.classList.remove('show');
-                  tgl.setAttribute('aria-expanded', 'false');
-                });
-
                 dropMenu.classList.add('show');
                 this.classList.add('show');
                 this.setAttribute('aria-expanded', 'true');
+                if (parent) parent.classList.add('show');
               }
             }
           }
         });
       });
 
-      // Close mobile nav on link click
+      // Close mobile nav on regular link click
       document.querySelectorAll('.site-navbar .nav-link:not(.dropdown-toggle), .site-navbar .dropdown-item, .site-navbar .nav-btn-partner').forEach((link) => {
         link.addEventListener('click', () => {
           if (window.innerWidth < 992 && mobileNavCollapse.classList.contains('show')) {
