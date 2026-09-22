@@ -390,7 +390,44 @@
   }
 
   /* --------------------------------------------------------------------------
-     8. Main Initialization
+     8. WhatsApp Floating Widget & Popup Controller
+     -------------------------------------------------------------------------- */
+  function initWhatsAppWidget() {
+    const toggleBtn = document.getElementById('whatsappToggleBtn');
+    const popup = document.getElementById('whatsappChatPopup');
+    const closeBtn = document.getElementById('whatsappCloseBtn');
+
+    if (!toggleBtn || !popup) return;
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      popup.classList.toggle('active');
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        popup.classList.remove('active');
+      });
+    }
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (popup.classList.contains('active') && !popup.contains(e.target) && !toggleBtn.contains(e.target)) {
+        popup.classList.remove('active');
+      }
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popup.classList.contains('active')) {
+        popup.classList.remove('active');
+      }
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     9. Main Initialization
      -------------------------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', () => {
     initPlugins();
@@ -399,6 +436,7 @@
     initImageReveal();
     initInteractions();
     initNavbar();
+    initWhatsAppWidget();
 
     // Initialize headings when fonts are ready
     if (document.fonts && document.fonts.ready) {
